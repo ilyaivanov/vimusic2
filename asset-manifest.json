@@ -1,13 +1,13 @@
 {
-  "main.css": "/Vimusic2/static/css/main.1e65dcca.chunk.css",
-  "main.js": "/Vimusic2/static/js/main.dff46eb5.chunk.js",
-  "main.js.map": "/Vimusic2/static/js/main.dff46eb5.chunk.js.map",
-  "runtime~main.js": "/Vimusic2/static/js/runtime~main.ebeea119.js",
-  "runtime~main.js.map": "/Vimusic2/static/js/runtime~main.ebeea119.js.map",
-  "static/js/2.1b58a2ad.chunk.js": "/Vimusic2/static/js/2.1b58a2ad.chunk.js",
-  "static/js/2.1b58a2ad.chunk.js.map": "/Vimusic2/static/js/2.1b58a2ad.chunk.js.map",
-  "index.html": "/Vimusic2/index.html",
-  "precache-manifest.55a3f2062c42cb2651943b9b4f4a8692.js": "/Vimusic2/precache-manifest.55a3f2062c42cb2651943b9b4f4a8692.js",
-  "service-worker.js": "/Vimusic2/service-worker.js",
-  "static/css/main.1e65dcca.chunk.css.map": "/Vimusic2/static/css/main.1e65dcca.chunk.css.map"
+  "main.css": "/vimusic2/static/css/main.1e65dcca.chunk.css",
+  "main.js": "/vimusic2/static/js/main.dc052707.chunk.js",
+  "main.js.map": "/vimusic2/static/js/main.dc052707.chunk.js.map",
+  "runtime~main.js": "/vimusic2/static/js/runtime~main.3a21c012.js",
+  "runtime~main.js.map": "/vimusic2/static/js/runtime~main.3a21c012.js.map",
+  "static/js/2.1b58a2ad.chunk.js": "/vimusic2/static/js/2.1b58a2ad.chunk.js",
+  "static/js/2.1b58a2ad.chunk.js.map": "/vimusic2/static/js/2.1b58a2ad.chunk.js.map",
+  "index.html": "/vimusic2/index.html",
+  "precache-manifest.f4fc8197a4b5e04ec431ee8ed09d331b.js": "/vimusic2/precache-manifest.f4fc8197a4b5e04ec431ee8ed09d331b.js",
+  "service-worker.js": "/vimusic2/service-worker.js",
+  "static/css/main.1e65dcca.chunk.css.map": "/vimusic2/static/css/main.1e65dcca.chunk.css.map"
 }
