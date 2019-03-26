@@ -1,0 +1,27 @@
+.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid grey;
+    visibility: hidden;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid grey;
+}
+
+.video-container {
+    display: flex;
+    align-items: center;
+}
+
+.video-container:hover>.arrow-right {
+    visibility: visible;
+}
