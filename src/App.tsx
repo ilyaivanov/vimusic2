@@ -46,9 +46,11 @@ interface TreeProps {
 
 const Tree = ({ nodes, nodesOnLevel, onClick, level }: TreeProps) => <Fragment>
   {nodesOnLevel.map((nodeId: string) => (
-    <div key={nodes[nodeId].id}>
+    <Fragment key={nodes[nodeId].id}>
       <Video node={nodes[nodeId]} onClick={onClick} style={{ paddingLeft: marginStep * level }}/>
+
       <Separator level={level}/>
+
       {
         (nodes[nodeId].children && nodes[nodeId].isChildrenHidden) &&
         <Tree
@@ -57,7 +59,7 @@ const Tree = ({ nodes, nodesOnLevel, onClick, level }: TreeProps) => <Fragment>
           onClick={onClick}
           nodes={nodes}/>
       }
-    </div>
+    </Fragment>
   ))}
 </Fragment>;
 
@@ -67,7 +69,7 @@ const Separator = ({ level = 0 }: { level?: number }) =>
   <div style={{
     height: 1,
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: "#d6d6d6",
     marginLeft: 15 + level * marginStep,
     marginTop: 10,
     marginBottom: 10

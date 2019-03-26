@@ -19,9 +19,29 @@
 
 .video-container {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
 }
 
-.video-container:hover>.arrow-right {
+.video-container:hover > .arrow-right {
     visibility: visible;
+}
+
+
+.tags {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.tag {
+    background-color: #c0c0c0;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.active {
+    background-color: #7562c0;
 }
