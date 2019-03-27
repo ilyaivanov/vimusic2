@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
-import Video from "./components/Video";
-import { Node, TreeNode } from "./types";
-import { nodes, rootNodes } from "./initialState";
+import React, {Component} from "react";
+import Tree from "./components/Tree";
+import {Node, TreeNode} from "./types";
+import {nodes, rootNodes} from "./initialState";
 
 interface State {
   nodes: TreeNode,
@@ -19,60 +19,25 @@ class App extends Component<Props, State> {
   };
 
   onClick = (node: Node) => {
-    let nodes = { ...this.state.nodes };
+    let nodes = {...this.state.nodes};
     nodes[node.id] = {
       ...nodes[node.id],
       isChildrenHidden: !nodes[node.id].isChildrenHidden
     };
-    this.setState({ nodes });
+    this.setState({nodes});
   };
 
   render() {
     return (
       <div>
-        <Separator/>
-        <Tree nodes={this.state.nodes} onClick={this.onClick} level={0} nodesOnLevel={this.state.rootNodes}/>
+        <Tree
+          nodes={this.state.nodes}
+          onClick={this.onClick}
+          level={0}
+          nodesOnLevel={this.state.rootNodes}/>
       </div>
     );
   }
 }
-
-interface TreeProps {
-  nodes: TreeNode;
-  nodesOnLevel: string[];
-  level: number;
-  onClick: any;
-}
-
-const Tree = ({ nodes, nodesOnLevel, onClick, level }: TreeProps) => <Fragment>
-  {nodesOnLevel.map((nodeId: string) => (
-    <Fragment key={nodes[nodeId].id}>
-      <Video node={nodes[nodeId]} onClick={onClick} style={{ paddingLeft: marginStep * level }}/>
-
-      <Separator level={level}/>
-
-      {
-        (nodes[nodeId].children && nodes[nodeId].isChildrenHidden) &&
-        <Tree
-          nodesOnLevel={nodes[nodeId].children as string[]}
-          level={level + 1}
-          onClick={onClick}
-          nodes={nodes}/>
-      }
-    </Fragment>
-  ))}
-</Fragment>;
-
-const marginStep = 20;
-
-const Separator = ({ level = 0 }: { level?: number }) =>
-  <div style={{
-    height: 1,
-    width: "100%",
-    backgroundColor: "#d6d6d6",
-    marginLeft: 15 + level * marginStep,
-    marginTop: 10,
-    marginBottom: 10
-  }}/>;
 
 export default App;
