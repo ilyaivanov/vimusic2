@@ -34,11 +34,11 @@ class App extends Component<Props, State> {
     return (
       <div>
         <Dnd/>
-        <Tree
-          nodes={this.state.nodes}
-          onClick={this.onClick}
-          level={0}
-          nodesOnLevel={this.state.rootNodes}/>
+        {/*<Tree*/}
+          {/*nodes={this.state.nodes}*/}
+          {/*onClick={this.onClick}*/}
+          {/*level={0}*/}
+          {/*nodesOnLevel={this.state.rootNodes}/>*/}
       </div>
     );
   }

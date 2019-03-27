@@ -53,17 +53,16 @@ const Card: React.RefForwardingComponent<HTMLDivElement, CardProps> =
       }));
 
       const diff = 4;
-      const margin = 5;
-      const regularHeight = 1;
+      const margin = 6;
+      const regularHeight = 0;
       const hoverMargin = margin - diff / 2;
 
       return connectDropTarget(<div>
           <div style={{
-            height: isOver ? regularHeight + diff : regularHeight,
             width: '100%',
             backgroundColor: 'grey',
-            marginTop: isOver ? hoverMargin : margin,
-            marginBottom: isOver ? hoverMargin : margin,
+            marginTop: margin,
+            marginBottom: margin,
           }}/>
           <div style={{marginLeft: level * 30}}>
             <div ref={elementRef} style={style}>
@@ -128,6 +127,8 @@ export default DropTarget(
       // When dragging downwards, only move when the cursor is below 50%
       // When dragging upwards, only move when the cursor is above 50%
 
+      console.log(props.text, hoverClientY > hoverMiddleY ? 'lower' : 'upper');
+
       // Dragging downwards
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return
@@ -137,6 +138,7 @@ export default DropTarget(
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return
       }
+
 
       // Time to actually perform the action
       // props.moveCard(dragIndex, hoverIndex);

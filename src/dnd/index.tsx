@@ -5,11 +5,11 @@ import update from 'immutability-helper'
 const nodes = {
   '1': {
     id: 1,
-    text: 'Write a cool JS library',
+    text: 'Level 1',
   },
   '2': {
     id: 2,
-    text: 'Make it generic enough',
+    text: 'Level 2',
     // children: ['3', '4']
   },
   '3': {
@@ -27,11 +27,11 @@ const nodes = {
   },
   '6': {
     id: 6,
-    text: '???',
+    text: 'Level 3',
   },
   '7': {
     id: 7,
-    text: 'PROFIT',
+    text: 'Final',
   },
 };
 const rootNodes = [
@@ -43,7 +43,7 @@ const Container: React.FC = ({}) => {
   const [roots, setRoot] = useState(rootNodes);
 
   const moveCard = (dragIndex: number, hoverIndex: number) => {
-    console.log(dragIndex, hoverIndex);
+    // console.log(dragIndex, hoverIndex);
     setRoot(
       update(roots, {
         $splice: [[dragIndex, 1], [hoverIndex, 0, roots[dragIndex]]],
@@ -52,7 +52,7 @@ const Container: React.FC = ({}) => {
   };
 
   const setLevel = (index: number, level: number) => {
-    console.log(index, level);
+    // console.log(index, level);
   };
 
   return (
