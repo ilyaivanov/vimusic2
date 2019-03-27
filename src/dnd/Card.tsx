@@ -14,12 +14,14 @@ import ItemTypes from './ItemTypes'
 import {XYCoord} from 'dnd-core'
 
 const style = {
-  border: '1px dashed gray',
   padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
   backgroundColor: 'white',
-
-}
+  display: 'flex',
+  alignItems: 'center'
+};
+const dragHandleStyle = {
+  width: 10, cursor: 'move', height: 10, backgroundColor: 'black', marginRight: 10
+};
 
 export interface CardProps {
   id: any
@@ -30,6 +32,7 @@ export interface CardProps {
   setLevel: (dragIndex: number, level: number) => void
 
   isDragging: boolean
+  isOver: boolean
   connectDragSource: ConnectDragSource
   connectDropTarget: ConnectDropTarget
   connectDragPreview: ConnectDragPreview
@@ -39,28 +42,39 @@ interface CardInstance {
   getNode(): HTMLDivElement | null
 }
 
-const Card: React.RefForwardingComponent<HTMLDivElement,
-  CardProps> = React.forwardRef(
-  ({text, isDragging, connectDragSource, connectDragPreview, connectDropTarget, level}, ref) => {
-    const elementRef = useRef(null)
-    connectDragPreview(elementRef)
-    // connectDropTarget(elementRef)
+const Card: React.RefForwardingComponent<HTMLDivElement, CardProps> =
+  React.forwardRef(
+    ({text, isDragging, connectDragSource, connectDragPreview, connectDropTarget, level, isOver, index}, ref) => {
+      const elementRef = useRef(null);
+      connectDragPreview(elementRef);
 
-    const opacity = isDragging ? 0 : 1;
-    useImperativeHandle<{}, CardInstance>(ref, () => ({
-      getNode: () => elementRef.current,
-    }))
-    return connectDropTarget(<div style={{backgroundColor: '#ebebeb'}}>
-        <div style={{backgroundColor: isDragging ? 'lightGrey' : undefined, marginLeft: level * 30}}>
-          <div ref={elementRef} style={{...style, opacity}}>
-            {connectDragSource(<div style={{width: 10, cursor: 'move', height: 10, backgroundColor: 'black'}}/>)}
-            {text}
+      useImperativeHandle<{}, CardInstance>(ref, () => ({
+        getNode: () => elementRef.current,
+      }));
+
+      const diff = 4;
+      const margin = 5;
+      const regularHeight = 1;
+      const hoverMargin = margin - diff / 2;
+
+      return connectDropTarget(<div>
+          <div style={{
+            height: isOver ? regularHeight + diff : regularHeight,
+            width: '100%',
+            backgroundColor: 'grey',
+            marginTop: isOver ? hoverMargin : margin,
+            marginBottom: isOver ? hoverMargin : margin,
+          }}/>
+          <div style={{marginLeft: level * 30}}>
+            <div ref={elementRef} style={style}>
+              {connectDragSource(<div style={dragHandleStyle}/>)}
+              {text} ... {index}
+            </div>
           </div>
         </div>
-      </div>
-    )
-  },
-)
+      )
+    },
+  );
 
 export default DropTarget(
   ItemTypes.CARD,
@@ -74,27 +88,27 @@ export default DropTarget(
         return null
       }
       // node = HTML Div element from imperative API
-      const node = component.getNode()
+      const node = component.getNode();
       if (!node) {
         return null
       }
 
-      const dragIndex = monitor.getItem().index
-      const hoverIndex = props.index
+      const dragIndex = monitor.getItem().index;
+      const hoverIndex = props.index;
 
 
       // Determine rectangle on screen
-      const hoverBoundingRect = node.getBoundingClientRect()
+      const hoverBoundingRect = node.getBoundingClientRect();
 
       // Get vertical middle
       const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
       // Determine mouse position
-      const clientOffset = monitor.getClientOffset() as XYCoord
+      const clientOffset = monitor.getClientOffset() as XYCoord;
 
       // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
       let differenceFromInitialOffset = monitor.getSourceClientOffset() || {x: 0};
 
@@ -102,10 +116,9 @@ export default DropTarget(
       const diff = differenceFromInitialOffset.x;
 
       let level = Math.floor((diff - 15) / 30);
-      console.log(diff, level);
-      if (props.level !== level)
+      if (props.level !== level) {
         props.setLevel(dragIndex, level);
-
+      }
       // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
         return
@@ -126,17 +139,18 @@ export default DropTarget(
       }
 
       // Time to actually perform the action
-      props.moveCard(dragIndex, hoverIndex);
+      // props.moveCard(dragIndex, hoverIndex);
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
-      monitor.getItem().index = hoverIndex
+      // monitor.getItem().index = hoverIndex
     },
   },
-  (connect: DropTargetConnector) => ({
+  (connect: DropTargetConnector, monitor: DropTargetMonitor) => ({
     connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
   }),
 )(
   DragSource(
@@ -151,6 +165,7 @@ export default DropTarget(
       connectDragSource: connect.dragSource(),
       connectDragPreview: connect.dragPreview(),
       isDragging: monitor.isDragging(),
+
     }),
   )(Card),
 )
