@@ -7,6 +7,7 @@ body {
     display: flex;
     align-Items: center;
     position: relative;
+    height: 50px;
 }
 
 .card-stripe:nth-child(even) {
@@ -28,8 +29,15 @@ body {
 
 .drag-handle {
     width: 10px;
-    cursor: move;
     height: 10px;
-    background-color: black;
+    border-radius: 10px;
+    cursor: move;
+    background-color: #656565;
     margin-right: 10px;
+    visibility: hidden;
+}
+
+.card-stripe .drag-handle {
+    /*.card-stripe:hover .drag-handle {*/
+    visibility: visible;
 }

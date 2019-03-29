@@ -4,6 +4,12 @@ export interface TreeNode {
   [id: string]: { id: string, text: string, children?: string[] };
 }
 
+export interface Placement {
+  itemId: string;
+  position: PLACE_POSITION;
+  level: number;
+}
+
 export type PLACE_POSITION = 'PLACE_BEFORE' | 'PLACE_AFTER' | 'NONE';
 
 export interface CardInstance {

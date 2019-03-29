@@ -2,12 +2,13 @@ import React, {useState} from "react";
 import Tree from './tree/Tree';
 import DragDropContext from "./DragDropContext";
 import initialNodes from "./tree/initial";
+import {dropAt} from "./tree/placement";
 
 export default () => {
-  const [nodes] = useState(initialNodes);
+  const [nodes, setNodes] = useState(initialNodes);
 
   const onDrop = (id: string, placement: any) => {
-    console.log('OnDrop', id, placement);
+    setNodes(dropAt(nodes, id, placement));
   };
 
   return (
