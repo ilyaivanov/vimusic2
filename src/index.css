@@ -3,11 +3,20 @@ body {
     padding: 0;
 }
 
+.card-stripe {
+    display: flex;
+    align-Items: center;
+    position: relative;
+}
 
 .card-stripe:nth-child(even) {
     background-color: #fafafa;
 }
 
+.card-container {
+    display: flex;
+    align-Items: center;
+}
 
 .drag-hint {
     position: absolute;
@@ -15,4 +24,12 @@ body {
     left: 0;
     right: 0;
     background-color: #b3c4eb;
+}
+
+.drag-handle {
+    width: 10px;
+    cursor: move;
+    height: 10px;
+    background-color: black;
+    margin-right: 10px;
 }

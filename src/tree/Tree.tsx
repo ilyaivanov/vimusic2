@@ -11,8 +11,10 @@ const Container = ({nodes, onDrop}: any) => {
     return !isSubchild(nodes, dragId, dropId);
   };
 
-  const onCardDrop = (itemId: string) =>
-    onDrop(itemId, placement);
+  const onCardDrop = (id: string) => {
+    setPlacement({id, position: 'NONE', level: undefined});
+    onDrop(id, placement);
+  };
 
   const updatePlacement = (id: string, position: PLACE_POSITION, level: number) => {
     setPlacement({id, position, level});
