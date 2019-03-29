@@ -1,7 +1,8 @@
 import React, {useEffect, useImperativeHandle, useRef} from "react";
-import {CardProps} from "../Card";
-import {PADDING_PER_LEVEL} from "./constants";
-import {CardInstance} from "./types";
+import {CardInstance, CardProps} from "./types";
+import {hintHeight, PADDING_PER_LEVEL} from "./constant";
+import dropTarget from "./dropTarget";
+import dragSource from "./dragSource";
 
 const style = {
   display: 'flex',
@@ -11,9 +12,7 @@ const dragHandleStyle = {
   width: 10, cursor: 'move', height: 10, backgroundColor: 'black', marginRight: 10
 };
 
-const hintHeight = 10;
-
-const CardUi: React.RefForwardingComponent<HTMLDivElement, CardProps> =
+const RowItem: React.RefForwardingComponent<HTMLDivElement, CardProps> =
   React.forwardRef(
     ({text, isDragging, id, connectDragSource, connectDragPreview, placementLevel, placement = 'NONE', connectDropTarget, setPlacement, level, isOver, index}, ref) => {
       useEffect(() => {
@@ -62,4 +61,4 @@ const PlacementLabel = ({style}: any) =>
     ...style
   }}/>;
 
-export default CardUi;
+export default dropTarget(dragSource(RowItem));

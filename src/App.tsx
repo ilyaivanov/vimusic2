@@ -1,44 +1,18 @@
-import React, {Component} from "react";
-import {Node, TreeNode} from "./types";
-import {nodes, rootNodes} from "./initialState";
-import Dnd from './dnd';
+import React, {useState} from "react";
+import Tree from './tree/Tree';
 import DragDropContext from "./DragDropContext";
+import initialNodes from "./tree/initial";
 
-interface State {
-  nodes: TreeNode,
-  rootNodes: string[]
-}
+export default () => {
+  const [nodes] = useState(initialNodes);
 
-interface Props {
-
-}
-
-export default class App extends Component<Props, State> {
-  state = {
-    nodes,
-    rootNodes
+  const onDrop = (id: string, placement: any) => {
+    console.log('OnDrop', id, placement);
   };
 
-  onClick = (node: Node) => {
-    let nodes = {...this.state.nodes};
-    nodes[node.id] = {
-      ...nodes[node.id],
-      isChildrenHidden: !nodes[node.id].isChildrenHidden
-    };
-    this.setState({nodes});
-  };
-
-  render() {
-    return (
-      <DragDropContext>
-        <Dnd/>
-        {/*<Tree*/}
-          {/*nodes={this.state.nodes}*/}
-          {/*onClick={this.onClick}*/}
-          {/*level={0}*/}
-          {/*nodesOnLevel={this.state.rootNodes}/>*/}
-      </DragDropContext>
-    );
-  }
-}
-
+  return (
+    <DragDropContext>
+      <Tree nodes={nodes} onDrop={onDrop}/>
+    </DragDropContext>
+  )
+};
