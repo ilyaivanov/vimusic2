@@ -1,10 +1,8 @@
 import React, {Component} from "react";
-import Tree from "./components/Tree";
 import {Node, TreeNode} from "./types";
 import {nodes, rootNodes} from "./initialState";
-import HTML5Backend from 'react-dnd-html5-backend'
-import {DragDropContext} from 'react-dnd'
 import Dnd from './dnd';
+import DragDropContext from "./DragDropContext";
 
 interface State {
   nodes: TreeNode,
@@ -15,7 +13,7 @@ interface Props {
 
 }
 
-class App extends Component<Props, State> {
+export default class App extends Component<Props, State> {
   state = {
     nodes,
     rootNodes
@@ -32,16 +30,15 @@ class App extends Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <DragDropContext>
         <Dnd/>
         {/*<Tree*/}
           {/*nodes={this.state.nodes}*/}
           {/*onClick={this.onClick}*/}
           {/*level={0}*/}
           {/*nodesOnLevel={this.state.rootNodes}/>*/}
-      </div>
+      </DragDropContext>
     );
   }
 }
 
-export default DragDropContext(HTML5Backend)(App)

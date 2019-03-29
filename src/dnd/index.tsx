@@ -2,10 +2,9 @@ import React, {Fragment, useState} from 'react'
 import Card from './Card'
 import update from 'immutability-helper'
 import {PLACE_POSITION} from "./rect";
-import './index.css';
 
 export interface TreeNode {
-  [id: string]: { id: string, text: string, children?: string[], placement?: string; index?: number, placementLevel?: number };
+  [id: string]: { id: string, text: string, children?: string[] };
 }
 
 export const nodes: TreeNode = {
@@ -62,9 +61,9 @@ const rootNodes = [
 const Container: React.FC = ({}) => {
   const [cards, setCards] = useState(nodes) as any;
   const [roots, setRoot] = useState(rootNodes);
+  const [placement, setPlacement] = useState({});
 
   const moveCard = (dragIndex: number, hoverIndex: number) => {
-    // console.log(dragIndex, hoverIndex);
     setRoot(
       update(roots, {
         $splice: [[dragIndex, 1], [hoverIndex, 0, roots[dragIndex]]],
@@ -72,24 +71,16 @@ const Container: React.FC = ({}) => {
     )
   };
 
-  const setLevel = (index: number, level: number) => {
-
+  const onDrop = (id: string) => {
+    console.log('OnDrop', id, placement);
   };
 
   const canMove = (dragId: string, dropId: string) => {
-    return dragId !== dropId && !isSubchild(nodes, dragId, dropId);
+    return !isSubchild(nodes, dragId, dropId);
   };
 
-
-  const setPlacement = (id: string, placement: PLACE_POSITION, placementLevel: number) => {
-    setCards(
-      update(
-        cards,
-        {
-          [id]: {$merge: {placement, placementLevel}}
-        }
-      )
-    )
+  const updatePlacement = (id: string, position: PLACE_POSITION, level: number) => {
+    setPlacement({id, position, level});
   };
 
   return (
@@ -98,9 +89,10 @@ const Container: React.FC = ({}) => {
             level={0}
             nodesOnLevel={roots}
             moveCard={moveCard}
-            setLevel={setLevel}
+            onDrop={onDrop}
             canMove={canMove}
-            setPlacement={setPlacement}/>
+            placement={placement}
+            setPlacement={updatePlacement}/>
     </div>
   )
 };
@@ -111,26 +103,28 @@ interface TreeProps {
   level: number;
   moveCard: any;
   canMove: any;
-  setLevel: any;
+  onDrop: any;
   setPlacement: any;
+  placement: any;
 }
 
 
-const Tree = ({nodes, nodesOnLevel, level, canMove, moveCard, setLevel, setPlacement}: TreeProps) => (
+const Tree = ({nodes, nodesOnLevel, level, canMove, moveCard, onDrop, placement, setPlacement}: TreeProps) => (
   <Fragment>
     {
-      nodesOnLevel.map((id) => {
+      nodesOnLevel.map((id, index) => {
         const card = nodes[id];
         return <Fragment key={card.id}>
           <Card
+            isFirst={index === 0}
             level={level}
             canMove={canMove}
-            placement={card.placement}
+            placement={placement.id === id ? placement.position : undefined}
+            placementLevel={placement.id === id ? placement.level : undefined}
             id={card.id}
             text={card.text}
-            placementLevel={card.placementLevel}
             moveCard={moveCard}
-            setLevel={setLevel}
+            onDrop={onDrop}
             setPlacement={setPlacement}
           />
           {
@@ -140,8 +134,9 @@ const Tree = ({nodes, nodesOnLevel, level, canMove, moveCard, setLevel, setPlace
               nodesOnLevel={card.children}
               level={level + 1}
               moveCard={moveCard}
-              setLevel={setLevel}
+              onDrop={onDrop}
               canMove={canMove}
+              placement={placement}
               setPlacement={setPlacement}/>
           }
         </Fragment>

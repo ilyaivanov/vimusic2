@@ -1,4 +1,18 @@
 body {
-  margin: 10;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+}
+
+
+.card-stripe:nth-child(even) {
+    background-color: #fafafa;
+}
+
+
+.drag-hint {
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    background-color: #b3c4eb;
 }

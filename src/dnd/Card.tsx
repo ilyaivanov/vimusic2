@@ -1,4 +1,4 @@
-import React, {useEffect, useImperativeHandle, useRef} from 'react'
+import React from 'react'
 import {
   ConnectDragPreview,
   ConnectDragSource,
@@ -10,17 +10,11 @@ import {
   DropTargetConnector,
   DropTargetMonitor,
 } from 'react-dnd'
-import ItemTypes from './ItemTypes'
 import {XYCoord} from 'dnd-core'
 import {getVerticalPlacement, PLACE_POSITION} from "./rect";
-
-const style = {
-  display: 'flex',
-  alignItems: 'center',
-};
-const dragHandleStyle = {
-  width: 10, cursor: 'move', height: 10, backgroundColor: 'black', marginRight: 10
-};
+import {PADDING_PER_LEVEL} from "./components/constants";
+import {CardInstance} from "./components/types";
+import CardUi from "./components/CardUi";
 
 export interface CardProps {
   id: any
@@ -29,12 +23,13 @@ export interface CardProps {
   level: number
   placementLevel: number
   moveCard: (dragIndex: number, hoverIndex: number) => void
-  setLevel: (dragIndex: number, level: number) => void
+  onDrop: () => void
   canMove: (dragId: string, dropId: string) => boolean
   setPlacement: (id: string, placemnt: PLACE_POSITION, placementLevel?: number) => void
   placement: PLACE_POSITION
 
   isDragging: boolean
+  isFirst: boolean
   isOver: boolean
   connectDragSource: ConnectDragSource
   connectDropTarget: ConnectDropTarget
@@ -42,46 +37,13 @@ export interface CardProps {
 
 }
 
-interface CardInstance {
-  getNode(): HTMLDivElement | null
-}
-
-const PADDING_PER_LEVEL = 30;
-
-const Card: React.RefForwardingComponent<HTMLDivElement, CardProps> =
-  React.forwardRef(
-    ({text, isDragging, id, connectDragSource, connectDragPreview, placementLevel, placement = 'NONE', connectDropTarget, setPlacement, level, isOver, index}, ref) => {
-      useEffect(() => {
-        if (!isOver) {
-          setPlacement(id, 'NONE', undefined)
-        }
-      }, [isOver]);
-
-      const elementRef = useRef(null);
-      // connectDragPreview(elementRef);
-
-      useImperativeHandle<{}, CardInstance>(ref, () => ({
-        getNode: () => elementRef.current,
-      }));
-
-      return connectDropTarget(
-        <div className="card-stripe" style={{paddingLeft: level * PADDING_PER_LEVEL}}>
-          <div ref={elementRef} style={{...style, paddingLeft: 10, height: 50}}>
-            {connectDragPreview(
-              <div style={style}>
-                {connectDragSource(<div style={dragHandleStyle}/>)}
-                {text} ... {placement} ... {placementLevel} ... {isDragging && 'Dragging'}
-              </div>)
-            }
-          </div>
-        </div>
-      );
-    },
-  );
-
 export default DropTarget(
-  ItemTypes.CARD,
+  'CARD',
   {
+    drop(props: CardProps, monitor: DropTargetMonitor){
+      // @ts-ignore
+      props.onDrop(monitor.getItem().id)
+    },
     hover(
       props: CardProps,
       monitor: DropTargetMonitor,
@@ -104,7 +66,20 @@ export default DropTarget(
 
       let differenceFromInitialOffset = monitor.getSourceClientOffset() || {x: 0};
       const diff = differenceFromInitialOffset.x;
-      const placementLevel = Math.floor((diff - 15) / PADDING_PER_LEVEL);
+      let placementLevel = Math.floor((diff - 5) / PADDING_PER_LEVEL);
+
+
+      const levelThreshsold = (
+        props.placement == 'PLACE_BEFORE' && props.isFirst ||
+        props.placement == 'PLACE_AFTER' && monitor.getItem().id == props.id
+      )
+        ? props.level :
+        props.level + 1;
+
+
+      if (placementLevel > levelThreshsold) {
+        placementLevel = levelThreshsold
+      }
 
       if (props.placement != placement || props.placementLevel != placementLevel) {
         props.setPlacement(props.id, placement, placementLevel);
@@ -117,7 +92,7 @@ export default DropTarget(
   }),
 )(
   DragSource(
-    ItemTypes.CARD,
+    'CARD',
     {
       beginDrag: (props: CardProps) => ({
         id: props.id,
@@ -129,5 +104,5 @@ export default DropTarget(
       isDragging: monitor.isDragging(),
 
     }),
-  )(Card),
+  )(CardUi),
 )
