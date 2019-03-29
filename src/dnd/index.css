@@ -1,0 +1,3 @@
+.card-stripe:nth-child(even) {
+    background-color: #f3f3f3;
+}

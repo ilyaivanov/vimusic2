@@ -1,39 +1,60 @@
 import React, {Fragment, useState} from 'react'
 import Card from './Card'
 import update from 'immutability-helper'
+import {PLACE_POSITION} from "./rect";
+import './index.css';
 
-const nodes = {
+export interface TreeNode {
+  [id: string]: { id: string, text: string, children?: string[], placement?: string; index?: number, placementLevel?: number };
+}
+
+export const nodes: TreeNode = {
   '1': {
-    id: 1,
+    id: '1',
     text: 'Level 1',
   },
   '2': {
-    id: 2,
+    id: '2',
     text: 'Level 2',
-    // children: ['3', '4']
+    children: ['3', '4', '8']
   },
   '3': {
-    id: 3,
+    id: '3',
     text: 'Write README',
   },
   '4': {
-    id: 4,
+    id: '4',
     text: 'Create some examples',
-    // children: ['5']
+    children: ['5']
   },
   '5': {
-    id: 5,
+    id: '5',
     text: 'Spam in Twitter and IRC to promote it (note that this element is taller than the others)',
   },
   '6': {
-    id: 6,
+    id: '6',
     text: 'Level 3',
   },
   '7': {
-    id: 7,
+    id: '7',
     text: 'Final',
   },
+  '8': {
+    id: '8',
+    text: 'Subchild',
+  },
 };
+
+export const isSubchild = (nodes: TreeNode, parentId: string, childId: string): boolean => {
+  const childs = nodes[parentId].children;
+  if (!childs || childs.length === 0)
+    return false;
+
+  return childs.reduce((isChild, child) =>
+    isChild || (child === childId) || isSubchild(nodes, child, childId)
+    , false);
+};
+
 const rootNodes = [
   '1', '2', '6', '7'
 ];
@@ -52,7 +73,23 @@ const Container: React.FC = ({}) => {
   };
 
   const setLevel = (index: number, level: number) => {
-    // console.log(index, level);
+
+  };
+
+  const canMove = (dragId: string, dropId: string) => {
+    return dragId !== dropId && !isSubchild(nodes, dragId, dropId);
+  };
+
+
+  const setPlacement = (id: string, placement: PLACE_POSITION, placementLevel: number) => {
+    setCards(
+      update(
+        cards,
+        {
+          [id]: {$merge: {placement, placementLevel}}
+        }
+      )
+    )
   };
 
   return (
@@ -62,7 +99,8 @@ const Container: React.FC = ({}) => {
             nodesOnLevel={roots}
             moveCard={moveCard}
             setLevel={setLevel}
-            startIndex={0}/>
+            canMove={canMove}
+            setPlacement={setPlacement}/>
     </div>
   )
 };
@@ -71,28 +109,29 @@ interface TreeProps {
   nodes: TreeNode;
   nodesOnLevel: string[];
   level: number;
-  startIndex: number;
   moveCard: any;
+  canMove: any;
   setLevel: any;
+  setPlacement: any;
 }
 
-export interface TreeNode {
-  [id: string]: { id: string, text: string, children: string[] };
-}
 
-const Tree = ({nodes, nodesOnLevel, level, startIndex, moveCard, setLevel}: TreeProps) => (
+const Tree = ({nodes, nodesOnLevel, level, canMove, moveCard, setLevel, setPlacement}: TreeProps) => (
   <Fragment>
     {
-      nodesOnLevel.map((id, i) => {
+      nodesOnLevel.map((id) => {
         const card = nodes[id];
-        return <div key={card.id}>
+        return <Fragment key={card.id}>
           <Card
             level={level}
-            index={i}
+            canMove={canMove}
+            placement={card.placement}
             id={card.id}
             text={card.text}
+            placementLevel={card.placementLevel}
             moveCard={moveCard}
             setLevel={setLevel}
+            setPlacement={setPlacement}
           />
           {
             card.children &&
@@ -102,9 +141,10 @@ const Tree = ({nodes, nodesOnLevel, level, startIndex, moveCard, setLevel}: Tree
               level={level + 1}
               moveCard={moveCard}
               setLevel={setLevel}
-              startIndex={0}/>
+              canMove={canMove}
+              setPlacement={setPlacement}/>
           }
-        </div>
+        </Fragment>
       })
     }
   </Fragment>
