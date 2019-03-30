@@ -6,7 +6,7 @@ import dragSource from "./dragSource";
 
 const RowItem: React.RefForwardingComponent<HTMLDivElement, CardProps> =
   React.forwardRef(
-    ({text, isDragging, id, connectDragSource, connectDragPreview, placementLevel, placement = 'NONE', connectDropTarget, setPlacement, level, isOver, index}, ref) => {
+    ({text, isDragging, id, connectDragSource, connectDragPreview, placementLevel, placement = 'NONE', connectDropTarget, level, isOver, index}, ref) => {
       const elementRef = useRef(null);
 
       useImperativeHandle<{}, CardInstance>(ref, () => ({

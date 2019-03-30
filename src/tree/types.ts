@@ -2,12 +2,15 @@ import {ConnectDragPreview, ConnectDragSource, ConnectDropTarget} from "react-dn
 
 export interface TreeNode {
   [id: string]: { id: string, text: string, children?: string[] };
+
+  roots: { id: string, text: string, children?: string[] };
 }
 
 export interface Placement {
   itemId: string;
   position: PLACE_POSITION;
-  level: number;
+  level?: number;
+  placeInside?: boolean;
 }
 
 export type PLACE_POSITION = 'PLACE_BEFORE' | 'PLACE_AFTER' | 'NONE';
@@ -25,7 +28,7 @@ export interface CardProps {
   moveCard: (dragIndex: number, hoverIndex: number) => void
   onDrop: () => void
   canMove: (dragId: string, dropId: string) => boolean
-  setPlacement: (id: string, placement: PLACE_POSITION, placementLevel?: number) => void
+  updatePlacement: (id: string, placement: PLACE_POSITION, placementLevel?: number, placeInside?: boolean) => void
   placement: PLACE_POSITION
 
   isDragging: boolean

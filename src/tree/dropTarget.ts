@@ -48,7 +48,8 @@ export default DropTarget(
       }
 
       if (props.placement != placement || props.placementLevel != placementLevel) {
-        props.setPlacement(props.id, placement, placementLevel);
+        props.updatePlacement(props.id, placement, placementLevel, placementLevel > props.level);
+
       }
     },
   },

@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react'
 import Card from './RowItem';
-import {getRoots, isSubchild} from "./utils";
+import {isSubchild} from "./utils";
 import {PLACE_POSITION, TreeNode} from "./types";
 
 
@@ -11,22 +11,22 @@ const Container = ({nodes, onDrop}: any) => {
     return !isSubchild(nodes, dragId, dropId);
   };
 
-  const onCardDrop = (id: string) => {
-    setPlacement({id, position: 'NONE', level: undefined});
-    onDrop(id, placement);
+  const onCardDrop = (itemId: string) => {
+    onDrop(itemId, placement);
+    setPlacement({itemId: undefined, position: 'NONE', level: undefined});
   };
 
-  const updatePlacement = (id: string, position: PLACE_POSITION, level: number) => {
-    setPlacement({id, position, level});
+  const updatePlacement = (itemId: string, position: PLACE_POSITION, level: number, placeInside: boolean) => {
+    setPlacement({itemId, position, level, placeInside});
   };
 
   return (
     <Tree nodes={nodes}
-          nodesOnLevel={getRoots(nodes)}
+          nodesOnLevel={nodes.roots.children}
           onDrop={onCardDrop}
           canMove={canMove}
           placement={placement}
-          setPlacement={updatePlacement}/>
+          updatePlacement={updatePlacement}/>
   )
 };
 
@@ -36,7 +36,7 @@ interface TreeProps {
   level?: number;
   canMove: any;
   onDrop: any;
-  setPlacement: any;
+  updatePlacement: any;
   placement: any;
 }
 
@@ -50,12 +50,12 @@ const Tree = (props: TreeProps) => (
             isFirst={index === 0}
             level={props.level || 0}
             canMove={props.canMove}
-            placement={props.placement.id === id ? props.placement.position : undefined}
-            placementLevel={props.placement.id === id ? props.placement.level : undefined}
+            placement={props.placement.itemId === id ? props.placement.position : undefined}
+            placementLevel={props.placement.itemId === id ? props.placement.level : undefined}
             id={card.id}
             text={card.text}
             onDrop={props.onDrop}
-            setPlacement={props.setPlacement}
+            updatePlacement={props.updatePlacement}
           />
           {
             card.children &&

@@ -1,40 +1,47 @@
 import {TreeNode} from "./types";
+import {getRoots} from "./utils";
+
+const nodes = [
+  {
+    id: '1',
+    text: 'ID 1',
+  },
+  {
+    id: '2',
+    text: 'ID 2',
+    // children: ['3', '4', '8']
+  },
+  {
+    id: '3',
+    text: 'ID 3',
+  },
+  {
+    id: '4',
+    text: 'ID 4',
+    // children: ['5']
+  },
+  {
+    id: '5',
+    text: 'ID 5',
+  },
+  {
+    id: '6',
+    text: 'ID 6',
+  },
+  {
+    id: '7',
+    text: 'ID 7',
+  },
+  {
+    id: '8',
+    text: 'ID 8',
+  }
+];
+const tree = nodes.reduce((o, n) => ({...o, [n.id]: n}), {});
 
 export default {
-  '1': {
-    id: '1',
-    text: 'Level 1',
-  },
-  '2': {
-    id: '2',
-    text: 'Level 2',
-    children: ['3', '4', '8']
-  },
-  '3': {
-    id: '3',
-    text: 'Write README',
-  },
-  '4': {
-    id: '4',
-    text: 'Create some examples',
-    children: ['5']
-  },
-  '5': {
-    id: '5',
-    text: 'Spam in Twitter and IRC to promote it (note that this element is taller than the others)',
-  },
-  '6': {
-    id: '6',
-    text: 'Level 3',
-  },
-  '7': {
-    id: '7',
-    text: 'Final',
-  },
-  '8': {
-    id: '8',
-    text: 'Subchild',
-  },
+  ...tree,
+  roots: {id: 'roots', text: 'roots', children: getRoots(tree as TreeNode)}
 } as TreeNode;
 
 
